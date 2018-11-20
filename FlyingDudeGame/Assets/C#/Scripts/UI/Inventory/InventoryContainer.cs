@@ -11,11 +11,14 @@ public class InventoryContainer : MonoBehaviour
 
     private RectTransform rectTransform;
 
+    public GameObject toolTip;
+
     public Inventory inventory;
     public ItemSlot[] itemSlots;
 
     private void Start()
     {
+        toolTip = Instantiate(toolTip, transform.parent);
         rectTransform = GetComponent<RectTransform>();
         itemSlots = new ItemSlot[104];
         SetItemSlots();
@@ -26,6 +29,16 @@ public class InventoryContainer : MonoBehaviour
         for (int i = 0; i < itemSlots.Length; i++)
         {
             itemSlots[i] = rectTransform.GetChild(i).GetComponent<ItemSlot>();
+            itemSlots[i].toolTip = toolTip;
+        }
+    }
+
+    private void OnEnable()
+    {
+        for (int i = 0; i < itemSlots.Length; i++)
+        {
+            Item item = inventory.GetItem(i);
+            itemSlots[i].ItemData = (item == null)?null: item.itemData;
         }
     }
 

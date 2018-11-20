@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: FistsOfFury
+  m_EditorClassIdentifier: Assembly-CSharp::MeleeWeapon
+  name: FistsOfFury
+  icon: {fileID: 0}
+  maxStackSize: 1
+  attackRange: 5
+  flatDamageBoost:
+    name: 
+    amountMax: 10
+    amountMin: 20
+    damageType: {fileID: 11400000, guid: 44e9f17a90e0267498caac01b2508792, type: 2}

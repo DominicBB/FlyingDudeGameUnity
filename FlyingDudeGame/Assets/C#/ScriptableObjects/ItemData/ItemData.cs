@@ -6,8 +6,8 @@ using System;
 public class ItemData : ScriptableObject
 {
     public new string name;
-    public Image icon;
-    public int maxStackSize;
+    public Sprite icon;
+    public int maxStackSize = 1;
 
     public string GetToolTipInfo()
     {

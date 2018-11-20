@@ -24,6 +24,9 @@ public class CameraFollow : MonoBehaviour
 
     private void Update()
     {
+        if (PlayerInputManager.DisablePlayerInput)
+            return;
+
         float dTime = Time.deltaTime;
         UpdateRotationAmts();
     }

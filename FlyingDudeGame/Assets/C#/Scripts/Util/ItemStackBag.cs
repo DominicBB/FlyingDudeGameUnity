@@ -30,14 +30,18 @@ public class ItemStackBag
         BoundingIndex = 0;
     }
 
-    public void Add(ItemStack<Item> elem)
+    public bool Add(ItemStack<Item> elem)
     {
         EnsureCapacity(BoundingIndex);
-        UnsafeAdd(elem);
+        return UnsafeAdd(elem);
     }
 
-    public void UnsafeAdd(ItemStack<Item> elem)
+    public bool UnsafeAdd(ItemStack<Item> elem)
     {
+        if (AtMaxCapacity())
+        {
+            return false;
+        }
         if (FreeIndexs.Count == 0)
         {
             itemStacks[BoundingIndex++] = elem;
@@ -47,6 +51,7 @@ public class ItemStackBag
             itemStacks[FreeIndexs.RemoveAndGet<int>(FreeIndexs.Count - 1)] = elem;
         }
         NumElements++;
+        return true;
     }
 
     public ItemStack<Item> Get(int i)
@@ -106,6 +111,11 @@ public class ItemStackBag
             }
         }
         return -1;
+    }
+
+    public bool AtMaxCapacity()
+    {
+        return Capacity == NumElements;
     }
 
 }

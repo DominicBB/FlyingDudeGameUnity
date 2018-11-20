@@ -11,11 +11,11 @@ public class ItemStack<T>
     public int StackSize { get; private set; }
     public int MaxStackSize { get; private set; }
 
-    public ItemStack(T item)
+    public ItemStack(T item, int amt)
     {
         this.item = item;
         MaxStackSize = item.maxStackSize;
-        StackSize++;
+        StackSize+=amt;
     }
 
     public bool AddToStack(int amt)
@@ -30,6 +30,11 @@ public class ItemStack<T>
     public T Remove()
     {
         return (StackSize-- > 0) ? item : null;
+    }
+
+    public T Peek()
+    {
+        return (StackSize > 0) ? item : null;
     }
 
     public List<T> Remove(int amtToRemove)

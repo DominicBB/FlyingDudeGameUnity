@@ -5,6 +5,7 @@ using System.Collections;
 
 public abstract class Item : MonoBehaviour
 {
+    [HideInInspector]
     public int maxStackSize;
     public ItemData itemData;
 
@@ -13,5 +14,14 @@ public abstract class Item : MonoBehaviour
         maxStackSize = itemData.maxStackSize;
     }
 
+    public string GetToolTip()
+    {
+        return itemData.GetToolTipInfo();
+    }
 
+    public void SetItemData(ItemData newItemData)
+    {
+        itemData = newItemData;
+        name = itemData.name;
+    }
 }

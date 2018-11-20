@@ -6,5 +6,5 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "New Weapon", menuName = "WeaponData/Weapon")]
 public class WeaponData : ItemData {
     public float attackRange;
-    public DamageBoostFlat flatDamageBoost;
+    public DamageBoostFlatStruct flatDamageBoost;
 }

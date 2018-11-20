@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[CreateAssetMenu(fileName = "New MeleeWeapon", menuName = "Weapon/MeleeWeapon")]
+[CreateAssetMenu(fileName = "New MeleeWeapon", menuName = "WeaponData/MeleeWeapon")]
 public class MeleeWeapon : WeaponData
 {
-    [Range(0,2)]
-    public new float attackRange;
+    //TODO: limit attack range, make itemdata editor
 }

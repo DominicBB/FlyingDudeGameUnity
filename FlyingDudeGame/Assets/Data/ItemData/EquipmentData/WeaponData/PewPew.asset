@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 526833fb16b082240a15d9e9aaa230fc, type: 3}
+  m_Name: PewPew
+  m_EditorClassIdentifier: 
+  name: PewPew
+  icon: {fileID: 0}
+  maxStackSize: 1
+  attackRange: 100
+  flatDamageBoost:
+    name: 
+    amountMax: 20
+    amountMin: 40
+    damageType: {fileID: 11400000, guid: c5642a6db5b22794ba80a1249af8980a, type: 2}

@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class Armour : MonoBehaviour
+public class Armour : Item
 {
     public ArmourData armourData;
 }

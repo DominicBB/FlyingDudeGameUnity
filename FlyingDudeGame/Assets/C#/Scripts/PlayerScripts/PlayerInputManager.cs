@@ -37,6 +37,8 @@ public class PlayerInputManager : MonoBehaviour
 
     private Rigidbody rb;
     private Player player;
+
+    public static bool DisablePlayerInput { get; set; }
     // Use this for initialization
     void Start()
     {
@@ -49,6 +51,9 @@ public class PlayerInputManager : MonoBehaviour
 
     public void Update()
     {
+        if (DisablePlayerInput)
+            return;
+        
         scrollUD = Input.GetAxis(scrollWheel);
         forwardBack = Input.GetAxis(yMovement);
         leftRight = Input.GetAxis(xMovement);

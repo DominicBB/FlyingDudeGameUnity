@@ -6,6 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private SpellBook allSpells;
+    private Inventory inventory;
 
     private Animator animator;
     public Transform firePoint;
@@ -19,6 +20,8 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
         PlayerAnimation.Animator = animator;
         PlayerAnimation.Player = GetComponent<Player>();
+
+        inventory = GetComponent<Inventory>();
 
         allSpells = GetComponentInChildren<SpellBook>();
         PopulateSkillBar();
