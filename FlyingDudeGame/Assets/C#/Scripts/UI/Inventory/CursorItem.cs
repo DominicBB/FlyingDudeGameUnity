@@ -33,17 +33,32 @@ public class CursorItem : MonoBehaviour
         iconRect.GetComponentInChildren<Text>().text = "0";
     }
 
-    //private float cooldown = 1;
-    //private float lastTime;
+    private float cooldown = 1;
+    private float lastTime;
     public void UpdateCursorItemPosition(Vector2 position)
     {
         //if (Time.time > lastTime + cooldown)  
         //{
         //    lastTime = Time.time;
-            
+
         //    Debug.Log("Cursor: " + position);
         //    Debug.Log(parentRect.localPosition);
         //}
-        iconRect.localPosition = position;
+        //Debug.Log("Width " + Screen.width);
+        //Debug.Log("Height " + Screen.height);
+
+        iconRect.localPosition = ScreenSpaceToCanvasSpace(position);
+    }
+
+    private Vector2 ScreenSpaceToCanvasSpace(Vector2 vector2)
+    {
+        float res = ((float)Screen.currentResolution.width / (float)Screen.currentResolution.height);
+
+        Vector2 v = new Vector2
+        {
+            x = vector2.x * res,
+            y = vector2.y * res
+        };
+        return v;
     }
 }
