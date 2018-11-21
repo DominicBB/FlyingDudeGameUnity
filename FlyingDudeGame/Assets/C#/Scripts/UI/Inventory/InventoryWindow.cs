@@ -8,18 +8,24 @@ public class InventoryWindow : MonoBehaviour
     private bool inventoryOpen;
 
     public GameObject inventoryWindow;
-    // Use this for initialization
-    void Start()
-    {
-        
-    }
+    public CursorItem cursorItem;
 
-    // Update is called once per frame
+    private void Start()
+    {
+        cursorItem = Instantiate<CursorItem>(cursorItem, gameObject.GetComponent<RectTransform>());
+        cursorItem.GetComponent<RectTransform>().anchorMin =Vector2.zero;
+        cursorItem.GetComponent<RectTransform>().anchorMax = Vector2.zero;
+    }
     void Update()
     {
         if (Input.GetKeyDown(inventoryKey))
         {
             ToggleInventory();
+        }
+
+        if (CursorItem.IsItemOnCursor)
+        {
+            cursorItem.UpdateCursorItemPosition(Input.mousePosition);
         }
     }
 
@@ -44,7 +50,7 @@ public class InventoryWindow : MonoBehaviour
     {
         inventoryWindow.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = true;
+        Cursor.visible = false;
         PlayerInputManager.DisablePlayerInput = false;
         inventoryOpen = false;
     }

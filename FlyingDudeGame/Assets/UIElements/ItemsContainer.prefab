@@ -92,7 +92,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toolTip: {fileID: 1178069800532798, guid: 84399a08b016d3d4caad06d49466e7b8, type: 2}
-  inventory: {fileID: 0}
+  inventory: {fileID: 114563036828525852, guid: 64f4b0c732f78d24cbfb7643ace65cf3,
+    type: 2}
   itemSlots: []
 --- !u!222 &222767742217159232
 CanvasRenderer:

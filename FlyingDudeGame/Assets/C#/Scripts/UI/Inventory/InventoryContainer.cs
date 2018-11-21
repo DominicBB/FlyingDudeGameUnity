@@ -10,9 +10,9 @@ public class InventoryContainer : MonoBehaviour
     private const int ICON_INDEX = 2;
 
     private RectTransform rectTransform;
+    private CursorItem cursorItem;
 
     public GameObject toolTip;
-
     public Inventory inventory;
     public ItemSlot[] itemSlots;
 
@@ -22,32 +22,93 @@ public class InventoryContainer : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
         itemSlots = new ItemSlot[104];
         SetItemSlots();
+
+        InventoryWindow inventoryWindow = GetComponentInParent<InventoryWindow>();
+        cursorItem = inventoryWindow.cursorItem;
     }
 
     private void SetItemSlots()
     {
         for (int i = 0; i < itemSlots.Length; i++)
         {
-            itemSlots[i] = rectTransform.GetChild(i).GetComponent<ItemSlot>();
-            itemSlots[i].toolTip = toolTip;
+            ItemSlot itemSlot = rectTransform.GetChild(i).GetComponent<ItemSlot>();
+            itemSlots[i] = itemSlot;
+            Button button = itemSlot.GetComponentInChildren<Button>();
+            button.onClick.AddListener(delegate { ItemClicked(itemSlot.GetComponent<RectTransform>()); });
+            itemSlot.toolTip = toolTip;
         }
     }
 
     private void OnEnable()
     {
-        for (int i = 0; i < itemSlots.Length; i++)
-        {
-            Item item = inventory.GetItem(i);
-            itemSlots[i].ItemData = (item == null)?null: item.itemData;
-        }
+        RefreshItemSlots();
     }
+
+
 
     public void ItemClicked(RectTransform buttonRectTransform)
     {
-        if (!buttonRectTransform.GetChild(ICON_INDEX).gameObject.activeSelf)
-            return;
-        int index = buttonRectTransform.GetSiblingIndex();
+        int slotIndex = buttonRectTransform.GetSiblingIndex();
+        if (IsItemSlotEmpty(buttonRectTransform))
+        {
+            if (CursorItem.IsItemOnCursor)
+            {
+                ItemStack<Item> itemStack = inventory.ItemsOnCursor;
+                inventory.AddItem(itemStack.Peek(), itemStack.StackSize, slotIndex);
+                RemoveFromCursor();
+            }
+        }
+        else
+        {
+            if (!CursorItem.IsItemOnCursor)
+            {
+                inventory.PutItemOnCursor(inventory.GetItemStack(slotIndex), 1);
+                cursorItem.PutItemOnCursor(inventory.ItemsOnCursor, slotIndex);
+            }
+            else if (cursorItem.itemOnCursor.GetStackType() == inventory.GetItemStack(slotIndex).GetStackType())
+            {
+                inventory.GetItemStack(slotIndex).AddToStack(cursorItem.itemOnCursor.StackSize);
+                RemoveFromCursor();
+            }
+        }
+        UpdateInventory(slotIndex);
+    }
 
+    private void UpdateInventory()
+    {
+        inventory.UpdateInventory();
+        RefreshItemSlots();
+
+    }
+    private void UpdateInventory(int index)
+    {
+        inventory.UpdateInventory(index);
+        RefreshItemSlot(index);
+    }
+
+    private void RefreshItemSlots()
+    {
+        for (int i = 0; i < itemSlots.Length; i++)
+        {
+            RefreshItemSlot(i);
+        }
+    }
+
+    private void RefreshItemSlot(int index)
+    {
         Item item = inventory.GetItem(index);
+        itemSlots[index].ItemData = (item == null) ? null : item.itemData;
+
+    }
+
+    private bool IsItemSlotEmpty(RectTransform buttonRectTransform)
+    {
+        return !buttonRectTransform.GetChild(ICON_INDEX).gameObject.activeSelf;
+    }
+
+    private void RemoveFromCursor()
+    {
+        inventory.RemoveItemFromCursor();
+        cursorItem.RemoveItem();
     }
 }

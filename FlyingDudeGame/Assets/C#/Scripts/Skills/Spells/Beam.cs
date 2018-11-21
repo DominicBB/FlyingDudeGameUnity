@@ -4,44 +4,40 @@ using UnityEngine;
 
 public class Beam : NonTargetedSpell
 {
-    public float speed;
+    public float speedMultiplier;
     public float fireRate;
-    public float distance;
+    public float maxDistance;
 
     private Vector3 dir;
     private Vector3 end;
-    private float maxTime;
-    private float timer;
+    private Vector3 step;
+   
+    private float numSteps;
+    private float stepCount;
 
     public override void Initialise(Transform firePoint)
     {
+
         dir = firePoint.forward;
-        end = transform.position + (dir * distance);
-        maxTime = distance / speed;
-        timer = 0.0f;
+        Vector3 distanceVec = (dir * maxDistance);
+        end = transform.position + distanceVec;
+
+        step = dir * speedMultiplier;
+        numSteps = maxDistance / speedMultiplier;
+        stepCount = 0;
     }
-       
-
-    //private Transform firePoint;
-
- 
 
     private void Update()
     {
-        Debug.Log("timer, " + timer + " maxTime, " + maxTime);
-        if (timer >= maxTime)
+        if (stepCount >= numSteps)
         {
             Destroy(gameObject);
         }
         else
         {
-           
-            transform.position = Vector3.Lerp(transform.position, end, speed * Time.deltaTime);
-            timer += Time.deltaTime;
+            transform.position += (step * Time.deltaTime);
+            stepCount += (1 * Time.deltaTime);
         }
-        
-        
-
     }
 
 

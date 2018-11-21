@@ -23,6 +23,7 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             DeSelect();
             if (value == null)
             {
+                itemData = null;
                 icon.gameObject.SetActive(false);
                 return;
             }
@@ -80,14 +81,6 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
 
         RectTransform toolTipRectTransform = toolTip.GetComponent<RectTransform>();
-
-        //toolTipRectTransform.localScale = Vector3.one;
-        //toolTipRectTransform.offsetMin = new Vector2(25, 25);
-        //toolTipRectTransform.offsetMax = new Vector2(25, 25);
-        //toolTipRectTransform.localRotation = Quaternion.Euler(0, 0, 0);
-
-        //toolTipRectTransform.anchoredPosition = rectTransform.anchoredPosition;
-
         toolTipRectTransform.sizeDelta = new Vector2(200,200);
         toolTipRectTransform.localPosition = toolTipLocalPos;
     }
@@ -96,5 +89,10 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         Text toolTipText = toolTip.GetComponentInChildren<Text>();
         toolTipText.text =(itemData == null)?"YOU HAVE NOTHING": itemData.GetToolTipInfo();
+    }
+
+    public bool IsSlotActive()
+    {
+        return icon.gameObject.activeSelf;
     }
 }

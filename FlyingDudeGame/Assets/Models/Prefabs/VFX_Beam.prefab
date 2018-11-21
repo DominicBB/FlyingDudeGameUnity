@@ -43,7 +43,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1963712877181394
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,9 +263,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillHotBarIcon: {fileID: 1913185151546956, guid: f9166bb5c1ffeca4695c2e50e1b60d66,
     type: 2}
-  speed: 1
+  speedMultiplier: 50
   fireRate: 0
-  distance: 1000
+  maxDistance: 1000
 --- !u!136 &136472605433982090
 CapsuleCollider:
   m_ObjectHideFlags: 1

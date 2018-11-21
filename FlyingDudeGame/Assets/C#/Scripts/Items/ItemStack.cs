@@ -55,6 +55,25 @@ public class ItemStack<T>
         return items;
     }
 
+    public ItemStack<T> Split(int amtToRemove)
+    {
+        ItemStack<T> itemStack = new ItemStack<T>(Peek(), 0);
+
+        int dif = StackSize - amtToRemove;
+        
+        if(dif < 0)
+        {
+            itemStack.AddToStack(dif);
+            StackSize -= dif;
+        }
+        else
+        {
+            itemStack.AddToStack(amtToRemove);
+            StackSize -= amtToRemove;
+        }
+        return itemStack;
+    }
+
     public Type GetStackType()
     {
         return typeof(T);

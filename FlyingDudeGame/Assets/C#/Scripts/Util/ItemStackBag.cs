@@ -54,18 +54,40 @@ public class ItemStackBag
         return true;
     }
 
+    public bool Put(ItemStack<Item> itemStackToAdd, int index)
+    {
+        if (AtMaxCapacity())
+            return false;
+        
+        ItemStack<Item> itemStack = Get(index);
+
+        if (itemStack == null)
+        {
+            ItemStacks[index] = itemStackToAdd;
+            return true;
+        }
+
+        return UnsafeAdd(itemStackToAdd);
+
+    }
+
     public ItemStack<Item> Get(int i)
     {
         return itemStacks[i];
     }
-    
+
     public ItemStack<Item> Remove(int i)
     {
-        if( i != -1)
+        if (i != -1)
         {
             FreeIndexs.Add(i);
+            ItemStack<Item> itemStack = itemStacks[i];
+            itemStacks[i] = null;
+            NumElements--;
+            return itemStack;
         }
-        return (i == -1) ? null : itemStacks[i];
+
+        return null;
     }
 
     public ItemStack<Item> RemoveOfType(Type type)
@@ -103,9 +125,9 @@ public class ItemStackBag
 
     public int FindIndexOfType(Type type)
     {
-       for(int i = 0; i<BoundingIndex; i++)
+        for (int i = 0; i < BoundingIndex; i++)
         {
-            if(itemStacks[i].GetStackType() == type)
+            if (itemStacks[i].GetStackType() == type)
             {
                 return i;
             }
