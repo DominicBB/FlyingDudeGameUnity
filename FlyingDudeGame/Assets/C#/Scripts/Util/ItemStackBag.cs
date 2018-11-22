@@ -1,33 +1,30 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
-using System;
-using ListExtensions;
+using UnityEngine;
 
 public class ItemStackBag
 {
-    private ItemStack<Item>[] ItemStacks
-    {
-        get
-        {
-            return itemStacks;
-        }
-    }
-
     private ItemStack<Item>[] itemStacks;
-    public List<int> FreeIndexs { get; private set; }
+    public PriorityQueue<int> FreeIndexs { get; private set; }
+    public PriorityQueue<int> UsedIndexs { get; private set; }
+
     public int Capacity { get; private set; }
     public int NumElements { get; private set; }
-    public int BoundingIndex { get; private set; }
+    public int BoundingIndex { get { return (UsedIndexs.Count == 0) ? 0: UsedIndexs.Peek(); } }
 
     public ItemStackBag(int capacity)
     {
         itemStacks = new ItemStack<Item>[capacity];
-        FreeIndexs = new List<int>();
+        FreeIndexs = new PriorityQueue<int>();
+        for (int i = 0; i < capacity; i++)
+        {
+            FreeIndexs.EnQueue(i);
+        }
+        UsedIndexs = new PriorityQueue<int>(FunctionalComparer<int>.Create((x,y)=> x> y ? -1 : x < y ? 1 : 0));
+
         Capacity = capacity;
         NumElements = 0;
-        BoundingIndex = 0;
     }
 
     public bool Add(ItemStack<Item> elem)
@@ -42,14 +39,9 @@ public class ItemStackBag
         {
             return false;
         }
-        if (FreeIndexs.Count == 0)
-        {
-            itemStacks[BoundingIndex++] = elem;
-        }
-        else
-        {
-            itemStacks[FreeIndexs.RemoveAndGet<int>(FreeIndexs.Count - 1)] = elem;
-        }
+        int index = FreeIndexs.DeQueue();
+        itemStacks[index] = elem;
+        UsedIndexs.EnQueue(index);
         NumElements++;
         return true;
     }
@@ -58,12 +50,14 @@ public class ItemStackBag
     {
         if (AtMaxCapacity())
             return false;
-        
+
         ItemStack<Item> itemStack = Get(index);
 
         if (itemStack == null)
         {
-            ItemStacks[index] = itemStackToAdd;
+            itemStacks[index] = itemStackToAdd;
+            UsedIndexs.EnQueue(index);
+            FreeIndexs.Remove(index);
             return true;
         }
 
@@ -71,18 +65,22 @@ public class ItemStackBag
 
     }
 
-    public ItemStack<Item> Get(int i)
+    public ItemStack<Item> Get(int index)
     {
-        return itemStacks[i];
+        return itemStacks[index];
     }
 
-    public ItemStack<Item> Remove(int i)
+    public ItemStack<Item> Remove(int index)
     {
-        if (i != -1)
+        if (index >= 0)
         {
-            FreeIndexs.Add(i);
-            ItemStack<Item> itemStack = itemStacks[i];
-            itemStacks[i] = null;
+            ItemStack<Item> itemStack = itemStacks[index];
+            if (itemStack == null)
+                return null;
+
+            FreeIndexs.EnQueue(index);
+            itemStacks[index] = null;
+            UsedIndexs.Remove(index);
             NumElements--;
             return itemStack;
         }
@@ -98,7 +96,7 @@ public class ItemStackBag
 
     public ItemStack<Item> RemoveLast()
     {
-        return Remove(BoundingIndex--);
+        return Remove(BoundingIndex);
     }
 
     public void EnsureCapacity(int indexWanted)
@@ -113,7 +111,8 @@ public class ItemStackBag
 
     public ItemStack<Item> FindStackOfType(Type type)
     {
-        for (int i = 0; i < BoundingIndex; i++)
+        int finalI = BoundingIndex;
+        for (int i = 0; i < finalI; i++)
         {
             if (itemStacks[i].GetStackType() == type)
             {
@@ -125,7 +124,8 @@ public class ItemStackBag
 
     public int FindIndexOfType(Type type)
     {
-        for (int i = 0; i < BoundingIndex; i++)
+        int finalI = BoundingIndex;
+        for (int i = 0; i < finalI; i++)
         {
             if (itemStacks[i].GetStackType() == type)
             {
@@ -140,4 +140,27 @@ public class ItemStackBag
         return Capacity == NumElements;
     }
 
+    public List<ItemStack<Item>> ToList()
+    {
+        List<ItemStack<Item>> list = itemStacks.ToList<ItemStack<Item>>();
+        list.TrimExcess();
+        return list;
+    }
+}
+
+internal class FunctionalComparer<T> : IComparer<T>
+{
+    private Func<T, T, int> comparer;
+    public FunctionalComparer(Func<T, T, int> comparer)
+    {
+        this.comparer = comparer;
+    }
+    public static IComparer<T> Create(Func<T, T, int> comparer)
+    {
+        return new FunctionalComparer<T>(comparer);
+    }
+    public int Compare(T x, T y)
+    {
+        return comparer(x, y);
+    }
 }

@@ -1,8 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System;
-using System.Linq;
+﻿using System;
 
 public class ItemStack<T>
     where T : Item
@@ -15,13 +11,15 @@ public class ItemStack<T>
     {
         this.item = item;
         MaxStackSize = item.maxStackSize;
-        StackSize+=amt;
+        StackSize += amt;
     }
 
     public bool AddToStack(int amt)
     {
         if (StackSize > MaxStackSize)
+        {
             return false;
+        }
 
         StackSize += (MaxStackSize - amt >= StackSize) ? amt : MaxStackSize - StackSize;
         return true;
@@ -37,31 +35,24 @@ public class ItemStack<T>
         return (StackSize > 0) ? item : null;
     }
 
-    public List<T> Remove(int amtToRemove)
+    public ItemStack<T> RemoveAll()
     {
-        List<T> items = new List<T>();
-        for(int i = 0; i< amtToRemove; i++)
-        {
-            if(StackSize-- > 0)
-            {
-                items.Add(item);
-            }
-            else
-            {
-                break;
-            }
-        }
+        ItemStack<T> itemStack = new ItemStack<T>(Peek(), 0);
 
-        return items;
+        itemStack.AddToStack(StackSize);
+        StackSize -= StackSize;
+
+        return itemStack;
     }
+
 
     public ItemStack<T> Split(int amtToRemove)
     {
         ItemStack<T> itemStack = new ItemStack<T>(Peek(), 0);
 
         int dif = StackSize - amtToRemove;
-        
-        if(dif < 0)
+
+        if (dif < 0)
         {
             itemStack.AddToStack(dif);
             StackSize -= dif;
@@ -77,5 +68,10 @@ public class ItemStack<T>
     public Type GetStackType()
     {
         return typeof(T);
+    }
+
+    public bool SameStackType(ItemStack<Item> itemStack)
+    {
+        return GetStackType() == itemStack.GetStackType();
     }
 }

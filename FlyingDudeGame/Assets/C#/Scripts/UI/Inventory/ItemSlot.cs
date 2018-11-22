@@ -41,11 +41,11 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         toolTipLocalPos = new Vector3(v.x + xOffset, v.y + yOffset, v.z);
     }
 
-    private void Update()
-    {
-        Vector3 v = rectTransform.localPosition;
-        toolTipLocalPos = new Vector3(v.x + xOffset, v.y + yOffset, v.z);
-    }
+    //private void Update()
+    //{
+    //    Vector3 v = rectTransform.localPosition;
+    //    toolTipLocalPos = new Vector3(v.x + xOffset, v.y + yOffset, v.z);
+    //}
 
     public void OnPointerEnter(PointerEventData eventData)
     {

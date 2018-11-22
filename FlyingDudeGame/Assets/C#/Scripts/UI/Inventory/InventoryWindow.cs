@@ -4,10 +4,11 @@ using System;
 
 public class InventoryWindow : MonoBehaviour
 {
-    private KeyCode inventoryKey = KeyCode.I;
+    private readonly KeyCode inventoryKey = KeyCode.I;
     private bool inventoryOpen;
 
     public GameObject inventoryWindow;
+    public InventoryContainer InventoryContainer { get; private set; }
     public CursorItem cursorItem;
 
     private void Start()
@@ -15,7 +16,10 @@ public class InventoryWindow : MonoBehaviour
         cursorItem = Instantiate<CursorItem>(cursorItem, gameObject.GetComponent<RectTransform>());
         cursorItem.GetComponent<RectTransform>().anchorMin =Vector2.zero;
         cursorItem.GetComponent<RectTransform>().anchorMax = Vector2.zero;
+
+        InventoryContainer = GetComponentInChildren<InventoryContainer>();
     }
+
     void Update()
     {
         if (Input.GetKeyDown(inventoryKey))

@@ -21,6 +21,4 @@ public class PlayerHUD : MonoBehaviour{
     {
         Destroy(skill.skillHotBarIcon);
     }
-
-    
 }

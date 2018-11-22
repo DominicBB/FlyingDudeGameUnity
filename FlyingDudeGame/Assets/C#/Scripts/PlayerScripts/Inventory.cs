@@ -49,6 +49,18 @@ public class Inventory : MonoBehaviour
         return (itemStack == null) ? null : itemStack.Remove();
     }
 
+    public ItemStack<Item> RemoveItemStack(int index)
+    {
+        ItemStack<Item> itemStack = itemStackBag.Get(index);
+        return (itemStack == null) ? null : itemStack.RemoveAll();
+    }
+
+    public ItemStack<Item> Split(int index, int amt)
+    {
+        ItemStack<Item> itemStack = itemStackBag.Get(index);
+        return (itemStack == null) ? null : itemStack.Split(amt);
+    }
+
     public bool AddItem(Item item, int amt)
     {
         ItemStack<Item> itemStack = GetItemStack(item.GetType());
@@ -153,6 +165,4 @@ public class Inventory : MonoBehaviour
     {
         return itemStackBag.Put(itemStack, index);
     }
-
-
 }

@@ -95,6 +95,8 @@ MonoBehaviour:
   inventory: {fileID: 114563036828525852, guid: 64f4b0c732f78d24cbfb7643ace65cf3,
     type: 2}
   itemSlots: []
+  splitSliderObj: {fileID: 1335940579726798, guid: 7fd67ca08f7ffd44d8b28cba25e36be4,
+    type: 2}
 --- !u!222 &222767742217159232
 CanvasRenderer:
   m_ObjectHideFlags: 1

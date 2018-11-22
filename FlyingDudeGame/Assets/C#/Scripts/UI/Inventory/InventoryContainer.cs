@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
-using System;
 
 public class InventoryContainer : MonoBehaviour
 {
@@ -15,10 +13,14 @@ public class InventoryContainer : MonoBehaviour
     public GameObject toolTip;
     public Inventory inventory;
     public ItemSlot[] itemSlots;
+    private SplitSlider splitSlider;
+    public GameObject splitSliderObj;
+    private bool shift;
 
     private void Start()
     {
         toolTip = Instantiate(toolTip, transform.parent);
+        splitSlider = Instantiate(splitSliderObj, transform.parent).GetComponent<SplitSlider>();
         rectTransform = GetComponent<RectTransform>();
         itemSlots = new ItemSlot[104];
         SetItemSlots();
@@ -44,11 +46,10 @@ public class InventoryContainer : MonoBehaviour
         RefreshItemSlots();
     }
 
-
-
     public void ItemClicked(RectTransform buttonRectTransform)
     {
         int slotIndex = buttonRectTransform.GetSiblingIndex();
+        //place items form cursor into empty slot
         if (IsItemSlotEmpty(buttonRectTransform))
         {
             if (CursorItem.IsItemOnCursor)
@@ -58,20 +59,36 @@ public class InventoryContainer : MonoBehaviour
                 RemoveFromCursor();
             }
         }
+
         else
         {
+            //Add items to cursor
             if (!CursorItem.IsItemOnCursor)
             {
-                inventory.PutItemOnCursor(inventory.GetItemStack(slotIndex), 1);
-                cursorItem.PutItemOnCursor(inventory.ItemsOnCursor, slotIndex);
+                if (HoldingShift())
+                    DeploySplitSlider(buttonRectTransform, slotIndex);
+                else
+                    AddStackToCursor(slotIndex, -1);
             }
-            else if (cursorItem.itemOnCursor.GetStackType() == inventory.GetItemStack(slotIndex).GetStackType())
+            //put items into stack if applicable
+            else if (cursorItem.itemOnCursor.SameStackType(inventory.GetItemStack(slotIndex)))
             {
                 inventory.GetItemStack(slotIndex).AddToStack(cursorItem.itemOnCursor.StackSize);
                 RemoveFromCursor();
             }
         }
         UpdateInventory(slotIndex);
+    }
+
+    private void DeploySplitSlider(RectTransform buttonRectTransform, int slotIndex)
+    {
+        int maxAmt = inventory.GetItemStack(slotIndex).StackSize;
+        splitSlider.EnableSlider(buttonRectTransform, maxAmt, slotIndex);
+    }
+
+    public void OnSpliderAccept(int value, int slotIndex)
+    {
+        AddStackToCursor(slotIndex, value);
     }
 
     private void UpdateInventory()
@@ -106,9 +123,26 @@ public class InventoryContainer : MonoBehaviour
         return !buttonRectTransform.GetChild(ICON_INDEX).gameObject.activeSelf;
     }
 
+    private void AddStackToCursor(int slotIndex, int amt)
+    {
+        ItemStack<Item> itemStack = inventory.GetItemStack(slotIndex);
+        inventory.PutItemOnCursor(itemStack, (amt == -1) ? itemStack.StackSize : amt);
+        cursorItem.PutItemOnCursor(inventory.ItemsOnCursor, slotIndex);
+    }
+
     private void RemoveFromCursor()
     {
         inventory.RemoveItemFromCursor();
         cursorItem.RemoveItem();
+    }
+
+    private bool HoldingShift()
+    {
+        return shift;
+    }
+
+    private void OnGUI()
+    {
+        shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
     }
 }
